@@ -16,7 +16,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         refresh:
-            pattern: ^/authentication_token/refresh
+            pattern: ^/token/refresh
             stateless: true
             anonymous: true
         api:
@@ -30,7 +30,7 @@ security:
         main:
             anonymous: true
             json_login:
-                check_path: /authentication_token
+                check_path: /token
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -38,6 +38,6 @@ security:
 
     access_control:
         - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
-        - { path: ^/authentication_token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/token/refresh$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/token$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
