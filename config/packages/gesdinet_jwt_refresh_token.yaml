@@ -1,0 +1,3 @@
+gesdinet_jwt_refresh_token:
+  ttl: 2592000 # срок годности токена 1 мес
+  single_use: true # Refresh-токен можно будет использовать лишь единожды. При этом сгенерируется новый refresh-token

@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "a18d19759cfde98d18cef62eb830917a",
+  "content-hash": "8e0486a1e28470f47d05222377bf92f7",
   "packages": [
     {
       "name": "api-platform/core",
@@ -175,16 +175,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
-                "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.1.0 || ^2.0",
-                "php": "^7 || ^8"
-            },
-            "replace": {
-                "ocramius/package-versions": "1.11.99"
-            },
+        "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
+        "shasum": ""
+      },
+      "require": {
+        "composer-plugin-api": "^1.1.0 || ^2.0",
+        "php": "^7 || ^8"
+      },
+      "replace": {
+        "ocramius/package-versions": "1.11.99"
+      },
             "require-dev": {
                 "composer/composer": "^1.9.3 || ^2.0@dev",
                 "ext-zip": "^1.13",
@@ -1602,16 +1602,16 @@
             "description": "A library for validating emails against several RFCs",
             "homepage": "https://github.com/egulias/EmailValidator",
             "keywords": [
-                "email",
-                "emailvalidation",
-                "emailvalidator",
-                "validation",
-                "validator"
+              "email",
+              "emailvalidation",
+              "emailvalidator",
+              "validation",
+              "validator"
             ],
-            "support": {
-                "issues": "https://github.com/egulias/EmailValidator/issues",
-                "source": "https://github.com/egulias/EmailValidator/tree/3.1.0"
-            },
+          "support": {
+            "issues": "https://github.com/egulias/EmailValidator/issues",
+            "source": "https://github.com/egulias/EmailValidator/tree/3.1.0"
+          },
           "funding": [
             {
               "url": "https://github.com/egulias",
@@ -1692,16 +1692,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/121af47c9aee9c03031bdeca3fac0540f59aa5c3",
-                "reference": "121af47c9aee9c03031bdeca3fac0540f59aa5c3",
-                "shasum": ""
-            },
-            "require": {
-                "laminas/laminas-code": "~3.4.1|^4.0",
-                "php": ">=7.1",
-                "symfony/filesystem": "^4.4.17|^5.0"
-            },
-            "conflict": {
-                "laminas/laminas-stdlib": "<3.2.1",
+        "reference": "121af47c9aee9c03031bdeca3fac0540f59aa5c3",
+        "shasum": ""
+      },
+      "require": {
+        "laminas/laminas-code": "~3.4.1|^4.0",
+        "php": ">=7.1",
+        "symfony/filesystem": "^4.4.17|^5.0"
+      },
+      "conflict": {
+        "laminas/laminas-stdlib": "<3.2.1",
                 "zendframework/zend-stdlib": "<3.2.1"
             },
             "replace": {
@@ -1754,26 +1754,83 @@
             "funding": [
                 {
                     "url": "https://github.com/Ocramius",
-                    "type": "github"
+                  "type": "github"
                 },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/ocramius/proxy-manager",
-                    "type": "tidelift"
-                }
+              {
+                "url": "https://tidelift.com/funding/github/packagist/ocramius/proxy-manager",
+                "type": "tidelift"
+              }
             ],
-            "time": "2021-01-14T21:52:44+00:00"
-        },
+      "time": "2021-01-14T21:52:44+00:00"
+    },
+    {
+      "name": "gesdinet/jwt-refresh-token-bundle",
+      "version": "v0.11.1",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/markitosgv/JWTRefreshTokenBundle.git",
+        "reference": "81f15cca6690c77f591d7d903775fd3da8778829"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/markitosgv/JWTRefreshTokenBundle/zipball/81f15cca6690c77f591d7d903775fd3da8778829",
+        "reference": "81f15cca6690c77f591d7d903775fd3da8778829",
+        "shasum": ""
+      },
+      "require": {
+        "lexik/jwt-authentication-bundle": "^1.1|^2.0@dev",
+        "php": "^5.5.9|>=7.0.8",
+        "symfony/framework-bundle": "~3.4|~4.0|~5.0",
+        "symfony/validator": "~3.4|~4.0|~5.0"
+      },
+      "require-dev": {
+        "doctrine/doctrine-bundle": "~1.4|~2.0",
+        "doctrine/mongodb-odm-bundle": "^3.4|^4.0",
+        "doctrine/orm": "^2.4.8",
+        "phpspec/phpspec": "^3.0|^4.0|^5.0|^6.0"
+      },
+      "type": "symfony-bundle",
+      "extra": {
+        "branch-alias": {
+          "dev-master": "1.0-dev"
+        }
+      },
+      "autoload": {
+        "psr-4": {
+          "Gesdinet\\JWTRefreshTokenBundle\\": ""
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
         {
-            "name": "laminas/laminas-code",
-            "version": "4.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laminas/laminas-code.git",
-                "reference": "28a6d70ea8b8bca687d7163300e611ae33baf82a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-code/zipball/28a6d70ea8b8bca687d7163300e611ae33baf82a",
+          "name": "Marcos Gómez Vilches",
+          "email": "marcos@gesdinet.com"
+        }
+      ],
+      "description": "Implements a refresh token system over Json Web Tokens in Symfony",
+      "keywords": [
+        "jwt refresh token bundle symfony json web"
+      ],
+      "support": {
+        "issues": "https://github.com/markitosgv/JWTRefreshTokenBundle/issues",
+        "source": "https://github.com/markitosgv/JWTRefreshTokenBundle/tree/v0.11.1"
+      },
+      "time": "2021-03-05T10:21:49+00:00"
+    },
+    {
+      "name": "laminas/laminas-code",
+      "version": "4.0.0",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/laminas/laminas-code.git",
+        "reference": "28a6d70ea8b8bca687d7163300e611ae33baf82a"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/laminas/laminas-code/zipball/28a6d70ea8b8bca687d7163300e611ae33baf82a",
                 "reference": "28a6d70ea8b8bca687d7163300e611ae33baf82a",
                 "shasum": ""
             },
@@ -2355,15 +2412,15 @@
                     "email": "alessandro.cinelli@gmail.com"
                 }
             ],
-            "description": "JSON Object Signing and Encryption library for PHP.",
-            "keywords": [
-                "JSON Web Signature",
-                "JSON Web Token",
-                "JWS",
-                "json",
-              "jwt",
-              "token"
-            ],
+          "description": "JSON Object Signing and Encryption library for PHP.",
+          "keywords": [
+            "JSON Web Signature",
+            "JSON Web Token",
+            "JWS",
+            "json",
+            "jwt",
+            "token"
+          ],
           "support": {
             "issues": "https://github.com/namshi/jose/issues",
             "source": "https://github.com/namshi/jose/tree/master"
@@ -2442,16 +2499,16 @@
       "dist": {
         "type": "zip",
         "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/1d01c49d4ed62f25aa84a747ad35d5a16924662b",
-                "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2 || ^8.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-2.x": "2.x-dev"
+        "reference": "1d01c49d4ed62f25aa84a747ad35d5a16924662b",
+        "shasum": ""
+      },
+      "require": {
+        "php": "^7.2 || ^8.0"
+      },
+      "type": "library",
+      "extra": {
+        "branch-alias": {
+          "dev-2.x": "2.x-dev"
                 }
             },
             "autoload": {
@@ -8107,16 +8164,16 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bernhard Schussek",
-                    "email": "bschussek@gmail.com"
-                }
-            ],
-            "description": "Assertions to validate method input/output with nice error messages.",
+          "license": [
+            "MIT"
+          ],
+          "authors": [
+            {
+              "name": "Bernhard Schussek",
+              "email": "bschussek@gmail.com"
+            }
+          ],
+          "description": "Assertions to validate method input/output with nice error messages.",
           "keywords": [
             "assert",
             "check",
@@ -8185,16 +8242,16 @@
       "time": "2020-09-25T08:01:41+00:00"
     }
   ],
-    "packages-dev": [
-        {
-            "name": "nikic/php-parser",
-            "version": "v4.10.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "c6d052fc58cb876152f89f532b95a8d7907e7f0e"
-            },
-            "dist": {
+  "packages-dev": [
+    {
+      "name": "nikic/php-parser",
+      "version": "v4.10.4",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/nikic/PHP-Parser.git",
+        "reference": "c6d052fc58cb876152f89f532b95a8d7907e7f0e"
+      },
+      "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/c6d052fc58cb876152f89f532b95a8d7907e7f0e",
                 "reference": "c6d052fc58cb876152f89f532b95a8d7907e7f0e",
@@ -8786,9 +8843,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2.5",
-        "ext-ctype": "*",
-        "ext-iconv": "*"
+      "php": ">=7.4",
+      "ext-ctype": "*",
+      "ext-iconv": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"

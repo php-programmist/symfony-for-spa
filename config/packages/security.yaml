@@ -15,6 +15,10 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        refresh:
+            pattern: ^/authentication_token/refresh
+            stateless: true
+            anonymous: true
         api:
             pattern: ^/api/
             stateless: true
@@ -34,5 +38,6 @@ security:
 
     access_control:
         - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
+        - { path: ^/authentication_token/refresh, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/authentication_token, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
