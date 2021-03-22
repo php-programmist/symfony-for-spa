@@ -31,6 +31,10 @@ services:
         decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 
+    App\ApiPlatform\UserDecorator:
+        decorates: 'api_platform.openapi.factory'
+        autoconfigure: false
+
     Redis: '@snc_redis.default'
 
     # add more service definitions when explicit configuration is needed

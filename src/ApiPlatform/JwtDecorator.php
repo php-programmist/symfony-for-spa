@@ -36,9 +36,9 @@ final class JwtDecorator implements OpenApiFactoryInterface
 
         $schemas = $openApi->getComponents()->getSchemas();
 
-        $this->addTokenSchema($schemas);
-        $this->addCredentialsSchema($schemas);
-        $this->addRefreshTokenSchema($schemas);
+        Schemas::addTokenSchema($schemas);
+        Schemas::addCredentialsSchema($schemas);
+        Schemas::addRefreshTokenSchema($schemas);
 
         $this->addTokenEndpoint($openApi);
         $this->addRefreshTokenEndpoint($openApi);
@@ -136,59 +136,4 @@ final class JwtDecorator implements OpenApiFactoryInterface
         $openApi->getPaths()->addPath($this->router->generate('gesdinet_jwt_refresh_token'), $pathItem);
     }
 
-    /**
-     * @param ArrayObject|null $schemas
-     */
-    private function addTokenSchema(?ArrayObject $schemas): void
-    {
-        $schemas['Token'] = new ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'token' => [
-                    'type' => 'string',
-                    'readOnly' => true,
-                ],
-                'refresh_token' => [
-                    'type' => 'string',
-                    'readOnly' => true,
-                ],
-            ],
-        ]);
-    }
-
-    /**
-     * @param ArrayObject|null $schemas
-     */
-    private function addRefreshTokenSchema(?ArrayObject $schemas): void
-    {
-        $schemas['RefreshCredentials'] = new ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'refresh_token' => [
-                    'type' => 'string',
-                    'example' => 'xxx00a7a9e970f9bbe076e05743e00648908c38366c551a8cdf524ba424fc3e520988f6320a54989bbe85931ffe1bfcc63e33fd8b45d58564039943bfbd8dxxx',
-                ],
-            ],
-        ]);
-    }
-
-    /**
-     * @param ArrayObject|null $schemas
-     */
-    private function addCredentialsSchema(?ArrayObject $schemas): void
-    {
-        $schemas['Credentials'] = new ArrayObject([
-            'type' => 'object',
-            'properties' => [
-                'email' => [
-                    'type' => 'string',
-                    'example' => 'johndoe@example.com',
-                ],
-                'password' => [
-                    'type' => 'string',
-                    'example' => 'apassword',
-                ],
-            ],
-        ]);
-    }
 }

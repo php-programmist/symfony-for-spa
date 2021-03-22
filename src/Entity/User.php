@@ -2,13 +2,26 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ApiResource(
+ *     collectionOperations={
+ *          "post"={
+ *             "denormalization_context"={"groups"={"user:create"}}
+ *           },
+ *     },
+ *     itemOperations={},
+ *     normalizationContext={"groups"={"user:read"}}
+ * )
  */
 class User implements UserInterface
 {
@@ -19,6 +32,10 @@ class User implements UserInterface
         4 => 30 * 60,
         5 => 180 * 60,
     ];
+
+    public const MIN_PASSWORD_LENGTH = 6;
+    public const MAX_PASSWORD_LENGTH = 4096;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -28,6 +45,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"user:read","user:create"})
      */
     private ?string $email = null;
 
@@ -41,6 +59,20 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private string $password;
+
+    /**
+     * @Groups("user:create")
+     * @SerializedName("password")
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *     min=User::MIN_PASSWORD_LENGTH,
+     *     minMessage="constraints.password.min",
+     *     max=User::MAX_PASSWORD_LENGTH,
+     *     maxMessage="constraints.password.max",
+     *     allowEmptyString = false
+     * )
+     */
+    private ?string $plainPassword = null;
 
     /**
      * @ORM\Column(type="integer", options={"default": 0})
@@ -218,5 +250,23 @@ class User implements UserInterface
 
         return $delay;
 
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string|null $plainPassword
+     * @return $this
+     */
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
     }
 }

@@ -37,7 +37,8 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
     access_control:
-        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
+        - { path: ^/api/users$, methods: [ POST ], roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
+        - { path: ^/api$, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
         - { path: ^/token/refresh$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/token$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
