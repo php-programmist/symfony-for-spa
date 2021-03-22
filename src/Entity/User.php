@@ -12,6 +12,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    private const FAILED_LOGIN_DELAYS = [
+        1 => 0,
+        2 => 0,
+        3 => 5 * 60,
+        4 => 30 * 60,
+        5 => 180 * 60,
+    ];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -181,5 +188,35 @@ class User implements UserInterface
     {
         $this->lastLogin = $lastLogin;
         return $this;
+    }
+
+    public function setAuthenticationSuccessData(): void
+    {
+        $this->setLastLogin(new DateTime());
+        $this->setFailedLoginCount(0);
+        $this->setLastLoginAttempt(null);
+    }
+
+    public function setAuthenticationFailureData(): void
+    {
+        $this->failedLoginCount++;
+        $this->setLastLoginAttempt(new DateTime());
+    }
+
+    /**
+     * @return int - задержка в секундах до следующей возможной попытки аутентификации
+     */
+    public function getLoginBlockDelay(): int
+    {
+        if (array_key_exists($this->failedLoginCount, self::FAILED_LOGIN_DELAYS)) {
+            $delay = self::FAILED_LOGIN_DELAYS[$this->failedLoginCount];
+        } else {
+            $maxCount = array_key_last(self::FAILED_LOGIN_DELAYS);
+            $maxDelay = self::FAILED_LOGIN_DELAYS[$maxCount];
+            $delay = $maxDelay * (2 ** ($this->failedLoginCount - $maxCount));
+        }
+
+        return $delay;
+
     }
 }
