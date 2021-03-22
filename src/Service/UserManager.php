@@ -5,25 +5,46 @@ namespace App\Service;
 
 
 use App\Entity\User;
+use App\Event\User\RegisterEvent;
+use App\Event\User\UserRemovedEvent;
+use App\Event\User\UserUpdatedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Redis;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserManager
 {
     private EntityManagerInterface $entityManager;
     private Redis $redis;
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private UserPasswordEncoderInterface $passwordEncoder;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private EventDispatcherInterface $dispatcher;
 
     /**
      * @param EntityManagerInterface $entityManager
      * @param Redis $redis
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(EntityManagerInterface $entityManager, Redis $redis)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Redis $redis,
+        UserPasswordEncoderInterface $passwordEncoder,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->entityManager = $entityManager;
         $this->redis = $redis;
+        $this->passwordEncoder = $passwordEncoder;
+        $this->dispatcher = $eventDispatcher;
     }
 
     public function setAuthenticationSuccess(User $user): void
@@ -76,5 +97,45 @@ class UserManager
         }
 
         return $response;
+    }
+
+    /**
+     * @param User $user
+     * @param string $password
+     */
+    public function setEncodedPassword(User $user, string $password): void
+    {
+        $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+        $user->eraseCredentials();
+    }
+
+    /**
+     * @param User $user
+     */
+    public function registerUser(User $user): void
+    {
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        $this->dispatcher->dispatch(new RegisterEvent($user));
+    }
+
+    /**
+     * @param User $user
+     */
+    public function updateUser(User $user): void
+    {
+        $this->entityManager->flush();
+        $this->dispatcher->dispatch(new UserUpdatedEvent($user));
+    }
+
+    /**
+     * @param User $user
+     */
+    public function remove(User $user): void
+    {
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+
+        $this->dispatcher->dispatch(new UserRemovedEvent($user));
     }
 }
