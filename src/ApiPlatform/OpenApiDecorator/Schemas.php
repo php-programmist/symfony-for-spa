@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\ApiPlatform;
+namespace App\ApiPlatform\OpenApiDecorator;
 
 
 use ArrayObject;

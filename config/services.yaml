@@ -27,11 +27,11 @@ services:
         resource: '../src/Controller/'
         tags: [ 'controller.service_arguments' ]
 
-    App\ApiPlatform\JwtDecorator:
+    App\ApiPlatform\OpenApiDecorator\JwtDecorator:
         decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 
-    App\ApiPlatform\UserDecorator:
+    App\ApiPlatform\OpenApiDecorator\UserDecorator:
         decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 
