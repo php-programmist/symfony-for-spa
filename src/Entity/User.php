@@ -19,7 +19,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  *             "denormalization_context"={"groups"={"user:create"}}
  *           },
  *     },
- *     itemOperations={},
+ *     itemOperations={
+ *         "get"
+ *     },
  *     normalizationContext={"groups"={"user:read"}}
  * )
  */
@@ -167,7 +169,7 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->plainPassword = null;
     }
 
     /**
