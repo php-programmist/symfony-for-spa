@@ -10,8 +10,6 @@ class AuthenticationTest extends BaseApiTestCase
 {
     public function testLogin(): void
     {
-        $client = self::createClient();
-
         $user = new User();
         $user->setEmail('test@example.com');
         $user->setPassword(
@@ -21,24 +19,20 @@ class AuthenticationTest extends BaseApiTestCase
         $this->persistAndFlush($user);
 
         // retrieve a token
-        $response = $client->request('POST', '/token', [
+        $json = $this->sendPOST('/token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'email' => 'test@example.com',
                 'password' => '$3CR3T',
             ],
-        ]);
+        ], 200);
 
-        $json = $response->toArray();
-        self::assertResponseIsSuccessful();
         self::assertArrayHasKey('token', $json);
 
         // test not authorized
-        $client->request('GET', '/api/users/' . $user->getId());
-        self::assertResponseStatusCodeSame(401);
+        $this->sendGET('/api/users/' . $user->getId(), [], 401);
 
         // test authorized
-        $client->request('GET', '/api/users/' . $user->getId(), ['auth_bearer' => $json['token']]);
-        self::assertResponseIsSuccessful();
+        $this->sendGET('/api/users/' . $user->getId(), ['auth_bearer' => $json['token']], 200);
     }
 }
