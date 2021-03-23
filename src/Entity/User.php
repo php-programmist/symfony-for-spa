@@ -6,13 +6,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Email;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="constraints.email.exists")
  * @ApiResource(
  *     collectionOperations={
  *          "post"={
@@ -46,6 +49,11 @@ class User implements UserInterface
     private ?int $id = null;
 
     /**
+     * @Assert\Email(
+     *     message="constraints.email.incorrect",
+     *     mode=Email::VALIDATION_MODE_STRICT
+     * )
+     * @Assert\NotBlank(message="constraints.email.blank")
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"user:read","user:create"})
      */
@@ -65,7 +73,7 @@ class User implements UserInterface
     /**
      * @Groups("user:create")
      * @SerializedName("password")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="constraints.password.empty")
      * @Assert\Length(
      *     min=User::MIN_PASSWORD_LENGTH,
      *     minMessage="constraints.password.min",

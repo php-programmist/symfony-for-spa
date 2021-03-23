@@ -64,4 +64,49 @@ class Schemas
             ],
         ]);
     }
+
+    /**
+     * @param ArrayObject|null $schemas
+     */
+    public static function addViolationsSchema(?ArrayObject $schemas): void
+    {
+        $schemas['Violations'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'type' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+                'title' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+                'detail' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+                'violations' => [
+                    'type' => 'array',
+                    'readOnly' => true,
+                    'items' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'propertyPath' => [
+                                'type' => 'string',
+                                'readOnly' => true,
+                            ],
+                            'message' => [
+                                'type' => 'string',
+                                'readOnly' => true,
+                            ],
+                            'code' => [
+                                'type' => 'string',
+                                'readOnly' => true,
+                            ],
+                        ]
+                    ]
+                ],
+            ],
+        ]);
+    }
 }

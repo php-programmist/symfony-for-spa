@@ -37,6 +37,7 @@ final class UserDecorator implements OpenApiFactoryInterface
 
         Schemas::addTokenSchema($schemas);
         Schemas::addCredentialsSchema($schemas);
+        Schemas::addViolationsSchema($schemas);
 
         $this->addRegistrationEndpoint($openApi);
 
@@ -70,6 +71,16 @@ final class UserDecorator implements OpenApiFactoryInterface
             ],
             '400' => [
                 'description' => 'Invalid input',
+            ],
+            '422' => [
+                'description' => 'Unprocessable Entity',
+                'content' => [
+                    'application/json' => [
+                        'schema' => [
+                            '$ref' => '#/components/schemas/Violations',
+                        ],
+                    ],
+                ],
             ]
 
         ])->withRequestBody(new Model\RequestBody(
