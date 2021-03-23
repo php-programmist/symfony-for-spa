@@ -1,4 +1,16 @@
 {
+    "antishov/doctrine-extensions-bundle": {
+        "version": "1.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.4",
+            "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
+        },
+        "files": [
+            "./config/packages/stof_doctrine_extensions.yaml"
+        ]
+    },
     "api-platform/api-pack": {
         "version": "v1.3.0"
     },
@@ -15,6 +27,9 @@
             "./config/routes/api_platform.yaml",
             "./src/Entity/.gitignore"
         ]
+    },
+    "behat/transliterator": {
+        "version": "v1.3.0"
     },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
@@ -103,6 +118,9 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
+    },
+    "gedmo/doctrine-extensions": {
+        "version": "v3.0.3"
     },
     "gesdinet/jwt-refresh-token-bundle": {
         "version": "v0.11.1"

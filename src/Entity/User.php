@@ -15,6 +15,10 @@ use Symfony\Component\Validator\Constraints\Email;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_CREATED_AT", columns={"created_at"}),
+ *     @ORM\Index(name="IDX_UPDATED_AT", columns={"updated_at"}),
+ * })
  * @UniqueEntity(fields={"email"}, message="constraints.email.exists")
  * @ApiResource(
  *     collectionOperations={
@@ -98,6 +102,27 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     private ?DateTime $lastLogin;
+
+    /**
+     * @Gedmo\Mapping\Annotation\Timestampable(on="create")
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+     * @Groups({"user:read"})
+     */
+    protected DateTime $createdAt;
+
+    /**
+     * @Gedmo\Mapping\Annotation\Timestampable(on="update")
+     * @ORM\Column(type="datetime", options={"default": "CURRENT_TIMESTAMP"})
+     * @Groups({"user:read"})
+     */
+    protected DateTime $updatedAt;
+
+    /**
+     * Подтвердил ли пользователь свой Email?
+     * @ORM\Column(type="boolean", options={"default": false})
+     * @Groups({"user:read"})
+     */
+    private bool $emailConfirmed = false;
 
     public function getId(): ?int
     {
@@ -277,6 +302,68 @@ class User implements UserInterface
     public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConfirmed(): bool
+    {
+        return $this->emailConfirmed;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     * @return User
+     */
+    public function setCreatedAt(DateTime $createdAt): User
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmailConfirmed(): bool
+    {
+        return $this->emailConfirmed;
+    }
+
+    /**
+     * @param bool $emailConfirmed
+     * @return $this
+     */
+    public function setEmailConfirmed(bool $emailConfirmed): self
+    {
+        $this->emailConfirmed = $emailConfirmed;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function setConfirmed(): self
+    {
+        $this->setEmailConfirmed(true);
+
         return $this;
     }
 }
