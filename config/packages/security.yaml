@@ -19,22 +19,19 @@ security:
             pattern: ^/token/refresh
             stateless: true
             anonymous: true
-        api:
-            pattern: ^/api/
+        main:
             stateless: true
             anonymous: true
             provider: app_user_provider
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
-        main:
-            anonymous: true
             json_login:
                 check_path: /token
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
         - { path: ^/api/users$, methods: [ POST ], roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
