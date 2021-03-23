@@ -22,12 +22,17 @@ use Symfony\Component\Validator\Constraints\Email;
  * @UniqueEntity(fields={"email"}, message="constraints.email.exists")
  * @ApiResource(
  *     collectionOperations={
+ *          "get" ={
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          },
  *          "post"={
  *             "denormalization_context"={"groups"={"user:create"}}
  *           },
  *     },
  *     itemOperations={
- *         "get"
+ *         "get" ={
+ *              "security"="is_granted('ROLE_ADMIN') or user == object"
+ *         }
  *     },
  *     normalizationContext={"groups"={"user:read"}}
  * )
