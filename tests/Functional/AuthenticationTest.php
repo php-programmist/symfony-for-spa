@@ -4,14 +4,10 @@
 namespace App\Tests\Functional;
 
 
-use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\User;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 
-class AuthenticationTest extends ApiTestCase
+class AuthenticationTest extends BaseApiTestCase
 {
-    use ReloadDatabaseTrait;
-
     public function testLogin(): void
     {
         $client = self::createClient();
@@ -22,9 +18,7 @@ class AuthenticationTest extends ApiTestCase
             self::$container->get('security.password_encoder')->encodePassword($user, '$3CR3T')
         );
 
-        $manager = self::$container->get('doctrine')->getManager();
-        $manager->persist($user);
-        $manager->flush();
+        $this->persistAndFlush($user);
 
         // retrieve a token
         $response = $client->request('POST', '/token', [
