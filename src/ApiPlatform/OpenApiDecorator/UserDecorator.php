@@ -40,7 +40,7 @@ final class UserDecorator implements OpenApiFactoryInterface
         Schemas::addViolationsSchema($schemas);
 
         $this->addRegistrationEndpoint($openApi);
-
+        $this->addMeEndpoint($openApi);
         return $openApi;
     }
 
@@ -95,5 +95,42 @@ final class UserDecorator implements OpenApiFactoryInterface
         ));
         $pathItem = $pathItem->withPost($operation);
         $openApi->getPaths()->addPath($path, $pathItem);
+    }
+
+
+    /**
+     * @param OpenApi $openApi
+     */
+    private function addMeEndpoint(OpenApi $openApi): void
+    {
+        $pathItem = new Model\PathItem(
+            'Retrieves authenticated User resource.',
+            null,
+            null,
+            new Model\Operation(
+                'getMe',
+                [],
+                [
+                    '200' => [
+                        'description' => 'Authenticated User resource',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/User-user.read',
+                                ],
+                            ],
+                            'application/ld+json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/User.jsonld-user.read',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'Authenticated User resource.',
+                'Retrieves authenticated User resource.'
+            ),
+        );
+        $openApi->getPaths()->addPath($this->router->generate('api_me'), $pathItem);
     }
 }
