@@ -6,6 +6,7 @@ namespace App\Tests\Functional;
 
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use RuntimeException;
@@ -14,6 +15,9 @@ use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 class BaseApiTestCase extends ApiTestCase
 {
     use ReloadDatabaseTrait;
+
+    public const TEST_USER_EMAIL = 'test@example.com';
+    public const TEST_USER_PASSWORD = '123456';
 
     protected EntityManagerInterface $entityManager;
     protected Client $client;
@@ -77,5 +81,44 @@ class BaseApiTestCase extends ApiTestCase
     public function sendDELETE(string $url, array $options = [], ?int $expectedCode = null): array
     {
         return $this->sendRequest('DELETE', $url, $options, $expectedCode);
+    }
+
+    public function createUser(
+        string $email = self::TEST_USER_EMAIL,
+        string $password = self::TEST_USER_PASSWORD,
+        array $roles = []
+    ): User {
+        $user = (new User())
+            ->setEmail($email)
+            ->setRoles($roles);
+
+        $user->setPassword(
+            self::$container->get('security.password_encoder')->encodePassword($user, $password)
+        );
+
+        $this->persistAndFlush($user);
+
+        return $user;
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return string
+     */
+    public function getToken(
+        string $email = self::TEST_USER_EMAIL,
+        string $password = self::TEST_USER_PASSWORD
+    ): string {
+        $json = $this->sendPOST('/token', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => [
+                'email' => $email,
+                'password' => $password,
+            ],
+        ], 200);
+
+        self::assertArrayHasKey('token', $json);
+        return $json['token'];
     }
 }

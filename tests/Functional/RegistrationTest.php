@@ -11,8 +11,8 @@ class RegistrationTest extends BaseApiTestCase
         $json = $this->sendPOST('/api/users', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
-                'email' => 'test@example.com',
-                'password' => '$3CR3T',
+                'email' => self::TEST_USER_EMAIL,
+                'password' => self::TEST_USER_PASSWORD,
             ],
         ], 201);
 
