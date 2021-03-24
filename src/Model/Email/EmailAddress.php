@@ -6,6 +6,7 @@ namespace App\Model\Email;
 
 use App\Exception\Storage\JsonDecodeException;
 use JsonSerializable;
+use Symfony\Component\Mime\Address;
 
 class EmailAddress implements JsonSerializable
 {
@@ -83,5 +84,10 @@ class EmailAddress implements JsonSerializable
         $this->setTitle($data[self::SERIALIZE_KEY_TITLE]);
 
         return $this;
+    }
+
+    public function getAddress(): Address
+    {
+        return new Address($this->getEmail(), $this->getTitle());
     }
 }

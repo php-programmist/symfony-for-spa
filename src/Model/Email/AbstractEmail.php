@@ -103,9 +103,9 @@ abstract class AbstractEmail implements JsonSerializable
     public function getMailerEmail(EmailManager $manager): MailerEmail
     {
         return (new MailerEmail())
-            ->from($manager->getSenderAddress())
+            ->from($manager->getSenderAddress()->getAddress())
             ->setPlaceholders($this->getPlaceholders($manager))
-            ->to([$this->getRecipient()])
+            ->to($this->getRecipient()->getAddress())
             ->setAttachments($this->getAttachments())
             ->setMetadata($this->getMetadata())
             ->subject($this->getSubject())

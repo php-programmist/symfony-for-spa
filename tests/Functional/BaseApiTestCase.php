@@ -7,6 +7,7 @@ namespace App\Tests\Functional;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use App\Entity\User;
+use App\Model\Mailer\TestMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
@@ -33,6 +34,12 @@ class BaseApiTestCase extends ApiTestCase
     {
         $this->client = self::createClient();
         $this->updateScheme();
+    }
+
+    public function tearDown(): void
+    {
+        TestMailer::stopCatch();
+        TestMailer::clear();
     }
 
     /**

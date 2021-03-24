@@ -21,7 +21,8 @@ class RegistrationTest extends BaseApiTestCase
 
         self::assertArrayHasKey('token', $json);
         $mails = TestMailer::getSentEmailsTo(self::TEST_USER_EMAIL);
-        dd($mails);
+        self::assertCount(1, $mails);
+        self::assertEquals('Подтвердите Ваш Email', $mails[0]->getSubject());
     }
 
     /**

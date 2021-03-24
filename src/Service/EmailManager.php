@@ -173,6 +173,7 @@ class EmailManager
         $email = (new CustomUserEmail())
             ->setUser($user)
             ->setTemplate('_emails/email-confirm.html.twig')
+            ->setSubject('Подтвердите Ваш Email')
             ->setHighPriority(true)
             ->setSubstitutions([
                 '$confirm.url' => $this->getRoute(
@@ -194,6 +195,7 @@ class EmailManager
     {
         $email = (new CustomUserEmail())
             ->setTemplate('_emails/password-reset.html.twig')
+            ->setSubject('Сброс пароля')
             ->setUser($request->getUser())
             ->setHighPriority(true)
             ->setSubstitutions(

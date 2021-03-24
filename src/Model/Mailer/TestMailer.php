@@ -4,9 +4,9 @@
 namespace App\Model\Mailer;
 
 
-use App\Model\Email\EmailAddress;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\RawMessage;
 
 class TestMailer implements MailerInterface
@@ -39,7 +39,7 @@ class TestMailer implements MailerInterface
     {
         return array_filter(self::getSentEmails(), static function (MailerEmail $email) use ($recipientEmail) {
             $matched = array_filter($email->getTo(),
-                static fn(EmailAddress $address) => $address->getEmail() === $recipientEmail);
+                static fn(Address $address) => $address->getAddress() === $recipientEmail);
             return count($matched) > 0;
         });
     }
