@@ -34,6 +34,9 @@
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
+    "diarmuidie/envpopulate": {
+        "version": "1.2.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -174,6 +177,9 @@
         "files": [
             "./config/packages/lexik_jwt_authentication.yaml"
         ]
+    },
+    "m1/env": {
+        "version": "2.2.0"
     },
     "monolog/monolog": {
         "version": "2.2.0"

@@ -14,6 +14,7 @@
         "antishov/doctrine-extensions-bundle": "^1.4",
         "api-platform/core": "^2.6",
         "composer/package-versions-deprecated": "1.11.99.1",
+        "diarmuidie/envpopulate": "^1.2",
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/doctrine-migrations-bundle": "^3.0",
@@ -92,9 +93,11 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
+            "Diarmuidie\\EnvPopulate\\ScriptHandler::populateEnv",
             "@auto-scripts"
         ],
         "post-update-cmd": [
+            "Diarmuidie\\EnvPopulate\\ScriptHandler::populateEnv",
             "@auto-scripts"
         ]
     },
@@ -105,6 +108,14 @@
         "symfony": {
             "allow-contrib": false,
             "require": "5.2.*"
+        },
+        "env-populate": {
+            "files": [
+                {
+                    "example-file": ".env.dist",
+                    "generated-file": ".env"
+                }
+            ]
         }
     }
 }
