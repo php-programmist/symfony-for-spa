@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Model\Email\EmailAddress;
+use App\Model\Uuid;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -61,6 +63,11 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private ?int $id = null;
+
+    /**
+     * @ORM\Column(type="guid", unique=true)
+     */
+    private string $uuid;
 
     /**
      * @Assert\Email(
@@ -134,9 +141,37 @@ class User implements UserInterface
      */
     private bool $emailConfirmed = false;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $firstName = null;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $lastName = null;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $phone = null;
+
+    public function __construct()
+    {
+        $this->uuid = Uuid::create();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
     }
 
     public function getEmail(): ?string
@@ -375,5 +410,87 @@ class User implements UserInterface
         $this->setEmailConfirmed(true);
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string|null $firstName
+     * @return $this
+     */
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string|null $lastName
+     * @return $this
+     */
+    public function setLastName(?string $lastName): self
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string|null $phone
+     * @return $this
+     */
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+        return $this;
+    }
+
+    public function getFIO(): string
+    {
+        return trim($this->getFirstName() . ' ' . $this->getLastName());
+    }
+
+    /**
+     * @return EmailAddress
+     */
+    public function getEmailAddress(): EmailAddress
+    {
+        return (new EmailAddress())
+            ->setEmail($this->getEmail())
+            ->setTitle($this->getFIO());
+    }
+
+    /**
+     * @return array
+     */
+    public function getEmailSubstitutions(): array
+    {
+        return [
+            '$user.email' => $this->getEmail(),
+            '$user.first_name' => $this->getFirstName(),
+            '$user.last_name' => $this->getLastName(),
+            '$user.fio' => $this->getFIO(),
+        ];
     }
 }
