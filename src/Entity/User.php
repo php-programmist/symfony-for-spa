@@ -27,7 +27,12 @@ use Symfony\Component\Validator\Constraints\Email;
  *          },
  *          "post"={
  *             "denormalization_context"={"groups"={"user:create"}}
- *           },
+ *          },
+ *          "me"={
+ *             "method"="GET",
+ *             "path" = "/users/me",
+ *             "pagination_enabled"=false
+ *          }
  *     },
  *     itemOperations={
  *         "get" ={

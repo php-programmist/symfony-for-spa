@@ -4,21 +4,22 @@
 namespace App\Tests\Functional;
 
 
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-
 class MeTest extends BaseApiTestCase
 {
-    /**
-     * @throws TransportExceptionInterface
-     */
     public function testMe(): void
     {
         $user = $this->createUser();
         $token = $this->getToken();
 
-        // test authorized
-        $this->client->request('GET', '/api/me', ['auth_bearer' => $token]);
-        self::assertResponseRedirects('/api/users/' . $user->getId());
+        $json = $this->sendGET('/api/users/me', [
+            'headers' => [
+                'accept' => 'application/json'
+            ],
+            'auth_bearer' => $token
+        ], 200);
+
+        self::assertEquals($user->getEmail(), $json['email']);
+        self::assertFalse($json['emailConfirmed']);
     }
 
 }

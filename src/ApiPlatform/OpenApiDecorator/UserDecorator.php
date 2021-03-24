@@ -103,34 +103,37 @@ final class UserDecorator implements OpenApiFactoryInterface
      */
     private function addMeEndpoint(OpenApi $openApi): void
     {
-        $pathItem = new Model\PathItem(
-            'Retrieves authenticated User resource.',
-            null,
-            null,
-            new Model\Operation(
-                'getMe',
-                [],
-                [
-                    '200' => [
-                        'description' => 'Authenticated User resource',
-                        'content' => [
-                            'application/json' => [
-                                'schema' => [
-                                    '$ref' => '#/components/schemas/User-user.read',
-                                ],
+        $path = $this->router->generate('api_users_me_collection');
+        $pathItem = $openApi->getPaths()->getPath($path);
+        if (null === $pathItem) {
+            return;
+        }
+        $operation = $pathItem->getGet();
+        if (null === $operation) {
+            return;
+        }
+        $operation = $operation
+            ->withSummary('Authenticated User resource.')
+            ->withDescription('Retrieves authenticated User resource.')
+            ->withResponses([
+                '200' => [
+                    'description' => 'Authenticated User resource',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/User-user.read',
                             ],
-                            'application/ld+json' => [
-                                'schema' => [
-                                    '$ref' => '#/components/schemas/User.jsonld-user.read',
-                                ],
+                        ],
+                        'application/ld+json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/User.jsonld-user.read',
                             ],
                         ],
                     ],
                 ],
-                'Authenticated User resource.',
-                'Retrieves authenticated User resource.'
-            ),
-        );
-        $openApi->getPaths()->addPath($this->router->generate('api_me'), $pathItem);
+            ]);
+        $pathItem = $pathItem->withGet($operation);
+
+        $openApi->getPaths()->addPath($path, $pathItem);
     }
 }
