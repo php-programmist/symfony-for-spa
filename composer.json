@@ -20,6 +20,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
         "gesdinet/jwt-refresh-token-bundle": "^0.11.1",
+        "guzzlehttp/guzzle": "^7.3",
         "lexik/jwt-authentication-bundle": "^2.11",
         "nelmio/cors-bundle": "^2.1",
         "nesbot/carbon": "^2.46",
