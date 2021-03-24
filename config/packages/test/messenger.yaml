@@ -1,0 +1,7 @@
+framework:
+  messenger:
+    transports:
+      async: 'sync://'
+      async_high: 'sync://'
+      email: 'sync://'
+      email_high: 'sync://'

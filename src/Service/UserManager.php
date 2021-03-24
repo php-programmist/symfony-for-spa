@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Event\User\RegisterEvent;
 use App\Event\User\UserRemovedEvent;
 use App\Event\User\UserUpdatedEvent;
+use App\Exception\User\UserNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use JsonException;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -137,5 +138,22 @@ class UserManager
         $this->entityManager->flush();
 
         $this->dispatcher->dispatch(new UserRemovedEvent($user));
+    }
+
+    /**
+     * @param int $id
+     * @return User
+     * @throws UserNotFoundException
+     */
+    public function findOrFail(int $id): User
+    {
+        $user = $this->entityManager
+            ->getRepository(User::class)
+            ->find($id);
+        if (null === $user) {
+            throw new UserNotFoundException(sprintf('Не найден пользователь с ID %d', $id));
+        }
+
+        return $user;
     }
 }

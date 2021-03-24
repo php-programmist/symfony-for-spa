@@ -8,8 +8,12 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\ApiTestCase;
 use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Client;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use RuntimeException;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 
 class BaseApiTestCase extends ApiTestCase
@@ -22,9 +26,30 @@ class BaseApiTestCase extends ApiTestCase
     protected EntityManagerInterface $entityManager;
     protected Client $client;
 
+    /**
+     * @throws Exception
+     */
     public function setUp(): void
     {
         $this->client = self::createClient();
+        $this->updateScheme();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function updateScheme(): void
+    {
+        $application = new Application(self::$kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'doctrine:schema:update',
+            '--force' => true,
+            '--env' => 'test'
+        ]);
+        $output = new NullOutput();
+        $application->run($input, $output);
     }
 
     public function getEntityManager(): EntityManagerInterface

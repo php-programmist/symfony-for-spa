@@ -4,7 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-
+    router.request_context.host: '%env(BASE_HOST)%'
+    router.request_context.scheme: 'https'
+    site_url: '%router.request_context.scheme%://%router.request_context.host%'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -36,6 +38,13 @@ services:
         autoconfigure: false
 
     Redis: '@snc_redis.default'
+
+    App\Service\EmailManager:
+        arguments:
+            $siteName: '%env(SITE_NAME)%'
+            $siteUrl: '%site_url%'
+            $senderEmail: '%env(SENDER_EMAIL)%'
+            $senderTitle: '%env(SENDER_TITLE)%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

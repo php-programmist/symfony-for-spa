@@ -4,10 +4,13 @@
 namespace App\Tests\Functional;
 
 
+use App\Model\Mailer\TestMailer;
+
 class RegistrationTest extends BaseApiTestCase
 {
     public function testSuccessRegistration(): void
     {
+        TestMailer::startCatch();
         $json = $this->sendPOST('/api/users', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
@@ -17,6 +20,8 @@ class RegistrationTest extends BaseApiTestCase
         ], 201);
 
         self::assertArrayHasKey('token', $json);
+        $mails = TestMailer::getSentEmailsTo(self::TEST_USER_EMAIL);
+        dd($mails);
     }
 
     /**
