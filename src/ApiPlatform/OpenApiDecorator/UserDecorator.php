@@ -38,14 +38,17 @@ final class UserDecorator implements OpenApiFactoryInterface
         Schemas::addTokenSchema($schemas);
         Schemas::addCredentialsSchema($schemas);
         Schemas::addViolationsSchema($schemas);
+        Schemas::addSimpleStatusSchema($schemas);
 
         $this->addRegistrationEndpoint($openApi);
         $this->addMeEndpoint($openApi);
+        $this->addEmailConfirmEndpoint($openApi);
         return $openApi;
     }
 
     /**
      * @param OpenApi $openApi
+     * @noinspection PhpRouteMissingInspection
      */
     private function addRegistrationEndpoint(OpenApi $openApi): void
     {
@@ -100,6 +103,7 @@ final class UserDecorator implements OpenApiFactoryInterface
 
     /**
      * @param OpenApi $openApi
+     * @noinspection PhpRouteMissingInspection
      */
     private function addMeEndpoint(OpenApi $openApi): void
     {
@@ -127,6 +131,59 @@ final class UserDecorator implements OpenApiFactoryInterface
                         'application/ld+json' => [
                             'schema' => [
                                 '$ref' => '#/components/schemas/User.jsonld-user.read',
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
+        $pathItem = $pathItem->withGet($operation);
+
+        $openApi->getPaths()->addPath($path, $pathItem);
+    }
+
+
+    /**
+     * @param OpenApi $openApi
+     */
+    private function addEmailConfirmEndpoint(OpenApi $openApi): void
+    {
+        $route = $this->router->getRouteCollection()->get('api_users_email_confirm_item');
+        if (null === $route) {
+            return;
+        }
+        $path = $route->getPath();
+        $pathItem = $openApi->getPaths()->getPath($path);
+        if (null === $pathItem) {
+            return;
+        }
+        $operation = $pathItem->getGet();
+        if (null === $operation) {
+            return;
+        }
+        $operation = $operation
+            ->withSummary('Confirm user\'s email')
+            ->withDescription('Confirm user\'s email.')
+            ->withParameters([
+                ...$operation->getParameters(),
+                new Model\Parameter('token', 'path', 'Unique token', true)
+            ])
+            ->withResponses([
+                '200' => [
+                    'description' => 'Email successfully confirmed',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/SimpleStatus',
+                            ],
+                        ],
+                    ],
+                ],
+                '400' => [
+                    'description' => 'Invalid input',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Violations',
                             ],
                         ],
                     ],

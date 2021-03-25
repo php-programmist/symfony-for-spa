@@ -68,6 +68,26 @@ class Schemas
     /**
      * @param ArrayObject|null $schemas
      */
+    public static function addSimpleStatusSchema(?ArrayObject $schemas): void
+    {
+        $schemas['SimpleStatus'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'status' => [
+                    'type' => 'boolean',
+                    'readOnly' => true,
+                ],
+                'message' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @param ArrayObject|null $schemas
+     */
     public static function addViolationsSchema(?ArrayObject $schemas): void
     {
         $schemas['Violations'] = new ArrayObject([

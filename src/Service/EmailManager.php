@@ -194,7 +194,8 @@ class EmailManager
                 '$confirm.url' => $this->getRoute(
                     'email_confirm',
                     [
-                        'uuid' => $user->getUuid()
+                        'id' => $user->getId(),
+                        'token' => $user->getUuid()
                     ]
                 )
             ]);

@@ -6,7 +6,7 @@ namespace App\Tests\Functional;
 
 use App\Model\Mailer\TestMailer;
 
-class RegistrationTest extends BaseApiTestCase
+class UserTest extends BaseApiTestCase
 {
     public function testSuccessRegistration(): void
     {
@@ -73,5 +73,44 @@ class RegistrationTest extends BaseApiTestCase
                 'detail' => 'password: Пароль должен быть не менее 6 символов'
             ],
         ];
+    }
+
+    public function testMe(): void
+    {
+        $user = $this->createUser();
+        $token = $this->getToken();
+
+        $json = $this->sendGET('/users/me', [
+            'headers' => [
+                'accept' => 'application/json'
+            ],
+            'auth_bearer' => $token
+        ], 200);
+
+        self::assertEquals($user->getEmail(), $json['email']);
+        self::assertFalse($json['emailConfirmed']);
+    }
+
+    public function testEmailConfirm(): void
+    {
+        $user = $this->createUser();
+
+        $json = $this->sendGET(
+            sprintf('/users/%d/email/confirm/%s', $user->getId(), $user->getUuid()),
+            [],
+            200
+        );
+        self::assertTrue($json['status']);
+
+        //Проверяем, что почта подтверждена
+        $accessToken = $this->getToken();
+        $json = $this->sendGET('/users/me', [
+            'headers' => [
+                'accept' => 'application/json'
+            ],
+            'auth_bearer' => $accessToken
+        ], 200);
+
+        self::assertTrue($json['emailConfirmed']);
     }
 }

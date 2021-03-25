@@ -34,8 +34,9 @@ security:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
-        - { path: ^/api/v1/users$, methods: [ POST ], roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
-        - { path: ^/api/v1$, roles: IS_AUTHENTICATED_ANONYMOUSLY } # Allows accessing API documentations and Swagger UI
+        - { path: ^/api/v1/users$, methods: [ POST ], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/users/\d+/email/confirm/([ a-zA-Z0-9- ]+)$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1/token/refresh$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1/token$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

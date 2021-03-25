@@ -39,6 +39,11 @@ use Symfony\Component\Validator\Constraints\Email;
  *     itemOperations={
  *         "get" ={
  *              "security"="is_granted('ROLE_ADMIN') or user == object"
+ *         },
+ *         "email_confirm" = {
+ *             "method"="GET",
+ *             "path"="/users/{id}/email/confirm/{token}",
+ *             "controller"=\App\Controller\Api\ConfirmEmailAction::class
  *         }
  *     },
  *     normalizationContext={"groups"={"user:read"}}

@@ -12,9 +12,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/email/{uuid}/confirm",
+     * @Route("/email/confirm/{id}/{token}",
      *      name="email_confirm",
-     *      requirements={"uuid": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"}
+     *      requirements={
+     *          "id": "\d+",
+     *          "token": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+     *      }
      * )
      * @param string $uuid
      * @return Response
@@ -26,7 +29,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/password/reset/{token}/{id}",
+     * @Route("/password/reset/{id}/{token}",
      *      name="password_reset",
      *      requirements={
      *          "id": "\d+",
