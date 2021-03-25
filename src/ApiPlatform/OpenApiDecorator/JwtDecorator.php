@@ -4,32 +4,12 @@
 namespace App\ApiPlatform\OpenApiDecorator;
 
 
-use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\Model;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ArrayObject;
-use Symfony\Component\Routing\RouterInterface;
 
-final class JwtDecorator implements OpenApiFactoryInterface
+final class JwtDecorator extends AbstractDecorator
 {
-    private OpenApiFactoryInterface $decorated;
-    /**
-     * @var RouterInterface
-     */
-    private RouterInterface $router;
-
-    /**
-     * @param OpenApiFactoryInterface $decorated
-     * @param RouterInterface $router
-     */
-    public function __construct(
-        OpenApiFactoryInterface $decorated,
-        RouterInterface $router
-    ) {
-        $this->decorated = $decorated;
-        $this->router = $router;
-    }
-
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = ($this->decorated)($context);
@@ -88,7 +68,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath($this->router->generate('authentication_token'), $pathItem);
+        $openApi->getPaths()->addPath($this->getPath('authentication_token'), $pathItem);
     }
 
     /**
@@ -133,7 +113,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
                 ),
             ),
         );
-        $openApi->getPaths()->addPath($this->router->generate('gesdinet_jwt_refresh_token'), $pathItem);
+        $openApi->getPaths()->addPath($this->getPath('gesdinet_jwt_refresh_token'), $pathItem);
     }
 
 }
