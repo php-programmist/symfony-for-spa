@@ -52,6 +52,7 @@ class TestMailer implements MailerInterface
     public static function clear(): void
     {
         self::$sentEmails = [];
+        self::$sentEmailsCounter = 0;
     }
 
     public static function startCatch(): void
