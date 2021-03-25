@@ -24,7 +24,7 @@ class LoginSubscriber implements EventSubscriberInterface
         $this->userManager = $userManager;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Events::AUTHENTICATION_SUCCESS => 'onAuthenticationSuccess',

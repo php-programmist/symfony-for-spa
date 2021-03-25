@@ -6,9 +6,9 @@ namespace App\EventSubscriber;
 
 use App\Event\User\PasswordResetRequestedEvent;
 use App\Event\User\RegisterEvent;
-use App\Exception\Email\SendEmailException;
 use App\Service\EmailManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 class SecuritySubscriber implements EventSubscriberInterface
 {
@@ -37,19 +37,18 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     /**
      * @param PasswordResetRequestedEvent $event
-     * @throws SendEmailException
+     * @throws TransportExceptionInterface
      */
     public function onPasswordResetRequested(PasswordResetRequestedEvent $event): void
     {
         $request = $event->getResetRequest();
-        if ($event->isSendEmail()) {
-            $this->emailManager->sendResetPasswordEmail($request);
-        }
+        $this->emailManager->sendResetPasswordEmail($request);
+
     }
 
     /**
      * @param RegisterEvent $event
-     * @throws SendEmailException
+     * @throws TransportExceptionInterface
      */
     public function onRegister(RegisterEvent $event): void
     {

@@ -34,7 +34,12 @@ use Symfony\Component\Validator\Constraints\Email;
  *             "method"="GET",
  *             "path" = "/users/me",
  *             "pagination_enabled"=false
- *          }
+ *          },
+ *         "password_reset_request" = {
+ *             "method"="POST",
+ *             "path"="/users/password-reset/request",
+ *             "controller"=\App\Controller\Api\PasswordResetRequestAction::class
+ *         }
  *     },
  *     itemOperations={
  *         "get" ={

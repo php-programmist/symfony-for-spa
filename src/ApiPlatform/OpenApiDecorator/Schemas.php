@@ -28,6 +28,22 @@ class Schemas
         ]);
     }
 
+    /**
+     * @param ArrayObject|null $schemas
+     */
+    public static function addEmailSchema(?ArrayObject $schemas): void
+    {
+        $schemas['Email'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'email' => [
+                    'type' => 'string',
+                    'example' => 'youremail@example.com',
+                ],
+            ],
+        ]);
+    }
+
 
     /**
      * @param ArrayObject|null $schemas

@@ -13,21 +13,11 @@ use Redis;
 
 class PasswordResetRequest
 {
-    const PASSWORD_RESET_KEY_PREFIX = 'password::reset';
-    const PASSWORD_RESET_REQUEST_TTL = 2 * 60 * 60;
+    public const PASSWORD_RESET_REQUEST_TTL = 2 * 60 * 60;
 
-    /**
-     * @var Redis
-     */
-    private $redis;
-    /**
-     * @var string
-     */
-    private $resetToken;
-    /**
-     * @var User
-     */
-    private $user;
+    private Redis $redis;
+    private string $resetToken;
+    private User $user;
 
     /**
      * PasswordResetRequest constructor.
@@ -60,9 +50,9 @@ class PasswordResetRequest
     /**
      * @return string
      */
-    public function getResetTokenKey(): string
+    public function getKey(): string
     {
-        return implode('::', [self::PASSWORD_RESET_KEY_PREFIX, $this->getUser()->getId()]);
+        return 'password:reset:' . $this->getUser()->getId();
     }
 
     /**
@@ -84,14 +74,14 @@ class PasswordResetRequest
         return $this;
     }
 
-    public function startRequest()
+    public function startRequest(): void
     {
-        $this->redis->setex($this->getResetTokenKey(), self::PASSWORD_RESET_REQUEST_TTL, $this->getResetToken());
+        $this->redis->setex($this->getKey(), self::PASSWORD_RESET_REQUEST_TTL, $this->getResetToken());
     }
 
-    public function finishRequest()
+    public function finishRequest(): void
     {
-        $this->redis->del($this->getResetTokenKey());
+        $this->redis->del($this->getKey());
     }
 
     /**
@@ -99,7 +89,7 @@ class PasswordResetRequest
      */
     public function isStarted(): bool
     {
-        $key = $this->getResetTokenKey();
+        $key = $this->getKey();
         $result = $this->redis->setnx($key, $this->getResetToken());
         //Даём 10 секунд на обработку сброса пароля (чтобы можно было через 10 секунд снова сбросить, если что-то пошло не так)
         if ($result) {
@@ -115,7 +105,7 @@ class PasswordResetRequest
      */
     public function isValid(): bool
     {
-        return $this->getResetToken() === $this->redis->get($this->getResetTokenKey());
+        return $this->getResetToken() === $this->redis->get($this->getKey());
     }
 
     /**
@@ -124,7 +114,7 @@ class PasswordResetRequest
      */
     public function validUntil(): DateTime
     {
-        $ttl = $this->redis->ttl($this->getResetTokenKey());
+        $ttl = $this->redis->ttl($this->getKey());
         if ($ttl === false) {
             throw new LogicException('Не найден ключ для сброса пароля');
         }
@@ -136,7 +126,7 @@ class PasswordResetRequest
      */
     private function loadCurrentResetToken(): bool
     {
-        $data = $this->redis->get($this->getResetTokenKey());
+        $data = $this->redis->get($this->getKey());
         if (!empty($data)) {
             $this->setResetToken($data);
         }

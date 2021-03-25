@@ -4,32 +4,16 @@
 namespace App\Exception\User;
 
 
-use App\Model\Security\PasswordResetRequest;
-use Exception;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Throwable;
 
-class PasswordResetException extends Exception
+class PasswordResetException extends BadRequestException
 {
-    /**
-     * @var PasswordResetRequest
-     */
-    private $resetRequest;
-
     public function __construct(
-        PasswordResetRequest $resetRequest,
-        $message = "",
-        $code = 0,
+        $message = 'Сброс пароля уже запрошен. Вы можете запрашивать сброс пароля не чаще одного раза в 2 часа. Если вам не пришло письмо о сбросе пароля, обратитесь к администратору сайта.',
+        $code = 400,
         Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
-        $this->resetRequest = $resetRequest;
-    }
-
-    /**
-     * @return PasswordResetRequest
-     */
-    public function getResetRequest(): PasswordResetRequest
-    {
-        return $this->resetRequest;
     }
 }

@@ -8,24 +8,14 @@ use App\Model\Security\PasswordResetRequest;
 
 class PasswordResetRequestedEvent
 {
-    /**
-     * @var PasswordResetRequest
-     */
-    private $resetRequest;
-    /**
-     * @var bool
-     */
-    private $sendEmail;
+    private PasswordResetRequest $resetRequest;
 
     /**
-     * PasswordResetRequestedEvent constructor.
      * @param PasswordResetRequest $resetRequest
-     * @param bool $sendEmail
      */
-    public function __construct(PasswordResetRequest $resetRequest, bool $sendEmail)
+    public function __construct(PasswordResetRequest $resetRequest)
     {
         $this->resetRequest = $resetRequest;
-        $this->sendEmail = $sendEmail;
     }
 
     /**
@@ -34,13 +24,5 @@ class PasswordResetRequestedEvent
     public function getResetRequest(): PasswordResetRequest
     {
         return $this->resetRequest;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSendEmail(): bool
-    {
-        return $this->sendEmail;
     }
 }

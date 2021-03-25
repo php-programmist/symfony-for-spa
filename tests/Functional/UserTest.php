@@ -113,4 +113,30 @@ class UserTest extends BaseApiTestCase
 
         self::assertTrue($json['emailConfirmed']);
     }
+
+    public function testPasswordReset(): void
+    {
+        $user = $this->createUser();
+        $email = $user->getEmail();
+        TestMailer::startCatch();
+
+        $json = $this->sendPOST(
+            '/users/password-reset/request',
+            [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'accept' => 'application/json'
+                ],
+                'json' => [
+                    'email' => $email,
+                ],
+            ],
+            200
+        );
+        self::assertTrue($json['status']);
+
+        $mails = TestMailer::getSentEmailsTo(self::TEST_USER_EMAIL);
+        self::assertEquals(1, TestMailer::getSentEmailsCount());
+        self::assertEquals('Сброс пароля', $mails[0]->getSubject());
+    }
 }

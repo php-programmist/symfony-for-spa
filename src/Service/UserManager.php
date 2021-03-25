@@ -5,11 +5,16 @@ namespace App\Service;
 
 
 use App\Entity\User;
+use App\Event\User\PasswordResetRequestedEvent;
 use App\Event\User\RegisterEvent;
 use App\Event\User\UserRemovedEvent;
 use App\Event\User\UserUpdatedEvent;
+use App\Exception\User\PasswordResetException;
 use App\Exception\User\UserNotFoundException;
+use App\Model\Security\PasswordResetRequest;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use JsonException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Redis;
@@ -57,7 +62,7 @@ class UserManager
     public function setAuthenticationFailure(string $email): void
     {
         /** @var User $user */
-        $user = $this->entityManager->getRepository(User::class)->findByEmail($email);
+        $user = $this->$this->getUserRepository()->findByEmail($email);
         if (null !== $user) {
             $user->setAuthenticationFailureData();
             $this->entityManager->flush();
@@ -147,13 +152,51 @@ class UserManager
      */
     public function findOrFail(int $id): User
     {
-        $user = $this->entityManager
-            ->getRepository(User::class)
-            ->find($id);
+        $user = $this->getUserRepository()->find($id);
         if (null === $user) {
             throw new UserNotFoundException(sprintf('Не найден пользователь с ID %d', $id));
         }
 
         return $user;
+    }
+
+    /**
+     * @param string $email
+     * @return User
+     * @throws NonUniqueResultException
+     * @throws UserNotFoundException
+     */
+    public function findByEmailOrFail(string $email): User
+    {
+        $user = $this->getUserRepository()->findByEmail($email);
+        if ($user === null) {
+            throw new UserNotFoundException(sprintf('Не найден пользователь с email %s', $email));
+        }
+        return $user;
+    }
+
+    /**
+     * @param User $user
+     * @throws PasswordResetException
+     */
+    public function sendPasswordResetRequest(User $user): void
+    {
+        $resetRequest = (new PasswordResetRequest($this->redis))->setUser($user);
+
+        if ($resetRequest->isStarted()) {
+            throw new PasswordResetException();
+        }
+
+        $resetRequest->startRequest();
+        $this->dispatcher->dispatch(new PasswordResetRequestedEvent($resetRequest));
+    }
+
+
+    /**
+     * @return UserRepository
+     */
+    private function getUserRepository(): UserRepository
+    {
+        return $this->entityManager->getRepository(User::class);
     }
 }

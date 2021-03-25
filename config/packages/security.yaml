@@ -36,6 +36,7 @@ security:
     access_control:
         - { path: ^/api/v1/users$, methods: [ POST ], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1/users/\d+/email/confirm/([ a-zA-Z0-9- ]+)$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/v1/users/password-reset/request$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1/token/refresh$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/v1/token$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

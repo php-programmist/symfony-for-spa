@@ -35,6 +35,7 @@ class BaseApiTestCase extends ApiTestCase
     {
         $this->client = self::createClient();
         $this->updateScheme();
+        $this->clearRedis();
     }
 
     public function tearDown(): void
@@ -154,5 +155,11 @@ class BaseApiTestCase extends ApiTestCase
 
         self::assertArrayHasKey('token', $json);
         return $json['token'];
+    }
+
+    public function clearRedis(): void
+    {
+        $redis = self::$container->get('snc_redis.default');
+        $redis->flushDB();
     }
 }
