@@ -11,7 +11,7 @@ class RegistrationTest extends BaseApiTestCase
     public function testSuccessRegistration(): void
     {
         TestMailer::startCatch();
-        $json = $this->sendPOST('/api/users', [
+        $json = $this->sendPOST('/users', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'email' => self::TEST_USER_EMAIL,
@@ -21,7 +21,7 @@ class RegistrationTest extends BaseApiTestCase
 
         self::assertArrayHasKey('token', $json);
         $mails = TestMailer::getSentEmailsTo(self::TEST_USER_EMAIL);
-        self::assertCount(1, $mails);
+        self::assertEquals(1, TestMailer::getSentEmailsCount());
         self::assertEquals('Подтвердите Ваш Email', $mails[0]->getSubject());
     }
 
@@ -34,7 +34,7 @@ class RegistrationTest extends BaseApiTestCase
     public function testRegistrationValidationErrors(string $email, string $password, string $detail): void
     {
 
-        $json = $this->sendPOST('/api/users', [
+        $json = $this->sendPOST('/users', [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'accept' => 'application/json'

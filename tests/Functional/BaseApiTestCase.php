@@ -23,6 +23,7 @@ class BaseApiTestCase extends ApiTestCase
 
     public const TEST_USER_EMAIL = 'test@example.com';
     public const TEST_USER_PASSWORD = '123456';
+    public const URI_PREFIX = '/api/v1';
 
     protected EntityManagerInterface $entityManager;
     protected Client $client;
@@ -84,7 +85,8 @@ class BaseApiTestCase extends ApiTestCase
     public function sendRequest(string $method, string $url, array $options = [], ?int $expectedCode = null): array
     {
         try {
-            $response = $this->client->request($method, $url, $options);
+            $fullUrl = self::URI_PREFIX . $url;
+            $response = $this->client->request($method, $fullUrl, $options);
             if (null !== $expectedCode) {
                 self::assertResponseStatusCodeSame($expectedCode);
             }

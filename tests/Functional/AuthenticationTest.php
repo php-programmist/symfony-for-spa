@@ -12,9 +12,9 @@ class AuthenticationTest extends BaseApiTestCase
         $token = $this->getToken();
 
         // test not authorized
-        $this->sendGET('/api/users/' . $user->getId(), [], 401);
+        $this->sendGET('/users/' . $user->getId(), [], 401);
 
         // test authorized
-        $this->sendGET('/api/users/' . $user->getId(), ['auth_bearer' => $token], 200);
+        $this->sendGET('/users/' . $user->getId(), ['auth_bearer' => $token], 200);
     }
 }

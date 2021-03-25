@@ -11,7 +11,7 @@ class MeTest extends BaseApiTestCase
         $user = $this->createUser();
         $token = $this->getToken();
 
-        $json = $this->sendGET('/api/users/me', [
+        $json = $this->sendGET('/users/me', [
             'headers' => [
                 'accept' => 'application/json'
             ],
