@@ -9,6 +9,7 @@ use App\Exception\User\UserNotFoundException;
 use App\Model\Email\AbstractEmail;
 use App\Model\Email\CustomUserEmail;
 use App\Model\Email\EmailAddress;
+use App\Model\Mailer\UnioneMailer;
 use App\Model\MessageBus\Message\SendEmailMessage;
 use App\Model\MessageBus\Message\SendHighPriorityEmailMessage;
 use App\Model\Security\PasswordResetRequest;
@@ -152,16 +153,30 @@ class EmailManager
     /**
      * @param string $template
      * @param array $templateParams
+     * @param array $placeholders
      * @return string
      */
-    public function render(string $template, array $templateParams = []): string
+    public function render(string $template, array $templateParams = [], array $placeholders = []): string
     {
         try {
             $result = $this->twig->render($template, $templateParams);
+            if (!$this->mailer instanceof UnioneMailer) {
+                $result = $this->applySubstitutions($result, $placeholders);
+            }
         } catch (LoaderError | RuntimeError | SyntaxError $ex) {
             throw new LogicException('Произошла ошибка при формировании шаблона письма: ' . $ex->getMessage() . $ex->getTraceAsString());
         }
         return $result;
+    }
+
+    /**
+     * @param string $data
+     * @param array $placeholders
+     * @return string
+     */
+    private function applySubstitutions(string $data, array $placeholders): string
+    {
+        return str_replace(array_keys($placeholders), array_values($placeholders), $data);
     }
 
     /**

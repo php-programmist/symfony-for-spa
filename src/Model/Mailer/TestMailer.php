@@ -23,9 +23,6 @@ class TestMailer implements MailerInterface
     public function send(RawMessage $email, Envelope $envelope = null): void
     {
         if (self::$isCatchEmails) {
-            $email->html(
-                $this->applySubstitutions($email->getHtmlBody(), $email->getPlaceholders())
-            );
             self::$sentEmails[] = $email;
         }
         self::$sentEmailsCounter++;
@@ -74,15 +71,5 @@ class TestMailer implements MailerInterface
     public static function getSentEmailsCount(): int
     {
         return self::$sentEmailsCounter;
-    }
-
-    /**
-     * @param string $data
-     * @param array $placeholders
-     * @return string
-     */
-    private function applySubstitutions(string $data, array $placeholders): string
-    {
-        return str_replace(array_keys($placeholders), array_values($placeholders), $data);
     }
 }

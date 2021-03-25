@@ -102,6 +102,11 @@ abstract class AbstractEmail implements JsonSerializable
      */
     public function getMailerEmail(EmailManager $manager): MailerEmail
     {
+        $html = $manager->render(
+            $this->getTemplate(),
+            $this->getTemplateParams(),
+            $this->getPlaceholders($manager)
+        );
         return (new MailerEmail())
             ->from($manager->getSenderAddress()->getAddress())
             ->setPlaceholders($this->getPlaceholders($manager))
@@ -109,7 +114,7 @@ abstract class AbstractEmail implements JsonSerializable
             ->setAttachments($this->getAttachments())
             ->setMetadata($this->getMetadata())
             ->subject($this->getSubject())
-            ->html($manager->render($this->getTemplate(), $this->getTemplateParams()));
+            ->html($html);
     }
 
     /**
