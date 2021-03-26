@@ -173,4 +173,30 @@ class UserTest extends BaseApiTestCase
         //При восстановлении пароля автоматически подтверждается Email
         self::assertTrue($json['emailConfirmed']);
     }
+
+    public function testPut(): void
+    {
+        $user = $this->createUser();
+        $accessToken = $this->getToken();
+
+        $json = $this->sendPUT(
+            '/users/' . $user->getId(),
+            [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'accept' => 'application/json'
+                ],
+                'json' => [
+                    'firstName' => 'Иван',
+                    'lastName' => 'Иванов',
+                    'phone' => '+7-900-123-45-67'
+                ],
+                'auth_bearer' => $accessToken
+            ],
+            200
+        );
+        self::assertSame('Иван', $json['firstName']);
+        self::assertSame('Иванов', $json['lastName']);
+        self::assertSame('+7-900-123-45-67', $json['phone']);
+    }
 }

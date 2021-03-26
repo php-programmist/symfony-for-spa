@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Model\Email\EmailAddress;
 use App\Model\Uuid;
@@ -28,7 +29,8 @@ use Symfony\Component\Validator\Constraints\Email;
  *              "security"="is_granted('ROLE_ADMIN')"
  *          },
  *          "post"={
- *             "denormalization_context"={"groups"={"user:create"}}
+ *             "denormalization_context"={"groups"={"user:create"}},
+ *             "validation_groups"={"Default", "create"},
  *          },
  *          "me"={
  *             "method"="GET",
@@ -45,6 +47,10 @@ use Symfony\Component\Validator\Constraints\Email;
  *         "get" ={
  *              "security"="is_granted('ROLE_ADMIN') or user == object"
  *         },
+ *         "put"={
+ *              "security"="object == user",
+ *              "security_message"="Access denied"
+ *          },
  *         "email_confirm" = {
  *             "method"="GET",
  *             "path"="/users/{id}/email/confirm/{token}",
@@ -56,7 +62,8 @@ use Symfony\Component\Validator\Constraints\Email;
  *             "controller"=\App\Controller\Api\PasswordResetConfirmAction::class
  *         }
  *     },
- *     normalizationContext={"groups"={"user:read"}}
+ *     normalizationContext={"groups"={"user:read"}},
+ *     denormalizationContext={"groups"={"user:write"}}
  * )
  */
 class User implements UserInterface
@@ -71,6 +78,8 @@ class User implements UserInterface
 
     public const MIN_PASSWORD_LENGTH = 6;
     public const MAX_PASSWORD_LENGTH = 4096;
+
+    public const PHONE_CONSTRAINT = '/^\+\d-\d{3}-\d{3}-\d{2}-\d{2}$/';
 
     /**
      * @ORM\Id
@@ -105,13 +114,14 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private string $password;
+    private string $password = '';
 
     /**
      * @Groups("user:create")
      * @SerializedName("password")
-     * @Assert\NotBlank(message="constraints.password.empty")
+     * @Assert\NotBlank(message="constraints.password.empty", groups={"create"})
      * @Assert\Length(
+     *     groups={"create"},
      *     min=User::MIN_PASSWORD_LENGTH,
      *     minMessage="constraints.password.min",
      *     max=User::MAX_PASSWORD_LENGTH,
@@ -159,16 +169,28 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"user:read", "user:write"})
      */
     private ?string $firstName = null;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"user:read", "user:write"})
      */
     private ?string $lastName = null;
 
     /**
+     * @Assert\Regex(pattern=User::PHONE_CONSTRAINT,message="constraints.phone.incorrect")
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"user:read", "user:write"})
+     * @ApiProperty(
+     *     attributes={
+     *         "openapi_context"={
+     *             "type"="string",
+     *             "example"="+0-000-000-00-00"
+     *         }
+     *     }
+     * )
      */
     private ?string $phone = null;
 
@@ -209,7 +231,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -236,7 +258,7 @@ class User implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -260,7 +282,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
