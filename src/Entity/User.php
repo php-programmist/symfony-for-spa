@@ -49,6 +49,11 @@ use Symfony\Component\Validator\Constraints\Email;
  *             "method"="GET",
  *             "path"="/users/{id}/email/confirm/{token}",
  *             "controller"=\App\Controller\Api\ConfirmEmailAction::class
+ *         },
+ *         "password_reset_confirm" = {
+ *             "method"="POST",
+ *             "path"="/users/{id}/password-reset/confirm/{token}",
+ *             "controller"=\App\Controller\Api\PasswordResetConfirmAction::class
  *         }
  *     },
  *     normalizationContext={"groups"={"user:read"}}

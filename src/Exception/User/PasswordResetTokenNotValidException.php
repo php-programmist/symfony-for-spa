@@ -4,9 +4,9 @@
 namespace App\Exception\User;
 
 
-use Exception;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class PasswordResetTokenNotValidException extends Exception
+class PasswordResetTokenNotValidException extends NotFoundHttpException
 {
 
 }

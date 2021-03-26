@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use App\Entity\User;
+use App\Event\User\PasswordResetEvent;
 use App\Event\User\PasswordResetRequestedEvent;
 use App\Event\User\RegisterEvent;
 use App\Event\User\UserRemovedEvent;
@@ -198,5 +199,31 @@ class UserManager
     private function getUserRepository(): UserRepository
     {
         return $this->entityManager->getRepository(User::class);
+    }
+
+    /**
+     * @param User $user
+     * @param string $token
+     * @return PasswordResetRequest
+     */
+    public function fetchPasswordResetRequest(User $user, string $token): PasswordResetRequest
+    {
+        return (new PasswordResetRequest($this->redis))->setResetToken($token)->setUser($user);
+    }
+
+    public function resetPassword(PasswordResetRequest $request, string $password): void
+    {
+        $user = $request->getUser();
+        $this->setEncodedPassword($user, $password);
+
+        if (!$user->isConfirmed()) {
+            $user->setEmailConfirmed(true);
+        }
+
+        $this->entityManager->flush();
+
+        $request->finishRequest();
+
+        $this->dispatcher->dispatch(new PasswordResetEvent($user));
     }
 }

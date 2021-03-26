@@ -44,6 +44,26 @@ class Schemas
         ]);
     }
 
+    /**
+     * @param ArrayObject|null $schemas
+     */
+    public static function addPasswordSchema(?ArrayObject $schemas): void
+    {
+        $schemas['PasswordWithConfirmation'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'password',
+                ],
+                'password_confirmation' => [
+                    'type' => 'string',
+                    'example' => 'password',
+                ],
+            ],
+        ]);
+    }
+
 
     /**
      * @param ArrayObject|null $schemas
@@ -141,6 +161,30 @@ class Schemas
                             ],
                         ]
                     ]
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @param ArrayObject|null $schemas
+     */
+    public static function addProblemSchema(?ArrayObject $schemas): void
+    {
+        $schemas['Problem'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'type' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+                'title' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+                'detail' => [
+                    'type' => 'string',
+                    'readOnly' => true,
                 ],
             ],
         ]);

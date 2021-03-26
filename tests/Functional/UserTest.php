@@ -138,5 +138,28 @@ class UserTest extends BaseApiTestCase
         $mails = TestMailer::getSentEmailsTo(self::TEST_USER_EMAIL);
         self::assertEquals(1, TestMailer::getSentEmailsCount());
         self::assertEquals('Сброс пароля', $mails[0]->getSubject());
+
+        preg_match('/href=".+?([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})"/',
+            $mails[0]->getHtmlBody(), $matches);
+        $token = $matches[1] ?? null;
+        self::assertNotNull($token);
+
+        $newPassword = '654321';
+        $confirmationUrl = sprintf('/users/%d/password-reset/confirm/%s', $user->getId(), $token);
+        $json = $this->sendPOST(
+            $confirmationUrl,
+            [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'accept' => 'application/json'
+                ],
+                'json' => [
+                    'password' => $newPassword,
+                    'password_confirmation' => $newPassword,
+                ],
+            ],
+            200
+        );
+        self::assertTrue($json['status']);
     }
 }

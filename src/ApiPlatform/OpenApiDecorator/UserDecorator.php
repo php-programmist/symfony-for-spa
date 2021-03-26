@@ -19,11 +19,14 @@ final class UserDecorator extends AbstractDecorator
         Schemas::addViolationsSchema($schemas);
         Schemas::addSimpleStatusSchema($schemas);
         Schemas::addEmailSchema($schemas);
+        Schemas::addPasswordSchema($schemas);
+        Schemas::addProblemSchema($schemas);
 
         $this->addRegistrationEndpoint($openApi);
         $this->addMeEndpoint($openApi);
         $this->addEmailConfirmEndpoint($openApi);
         $this->addPasswordResetRequestEndpoint($openApi);
+        $this->addPasswordResetConfirmEndpoint($openApi);
         return $openApi;
     }
 
@@ -46,6 +49,13 @@ final class UserDecorator extends AbstractDecorator
                 ],
                 '400' => [
                     'description' => 'Invalid input',
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/Violations',
+                            ],
+                        ],
+                    ],
                 ],
                 '422' => [
                     'description' => 'Unprocessable Entity',
@@ -113,7 +123,7 @@ final class UserDecorator extends AbstractDecorator
                 ->withDescription('Confirm user\'s email.')
                 ->withParameters([
                     ...$operation->getParameters(),
-                    new Model\Parameter('token', 'path', 'Unique token', true)
+                    new Model\Parameter('token', 'path', 'Unique token from email', true)
                 ])
                 ->withResponses([
                     '200' => [
@@ -185,5 +195,64 @@ final class UserDecorator extends AbstractDecorator
         };
 
         $this->changeOperation($openApi, 'api_users_password_reset_request_collection', self::METHOD_POST, $callback);
+    }
+
+    /**
+     * @param OpenApi $openApi
+     */
+    private function addPasswordResetConfirmEndpoint(OpenApi $openApi): void
+    {
+        $callback = static function (Model\Operation $operation) {
+            return $operation
+                ->withSummary('Confirmation of password reset')
+                ->withDescription('Type your new password')
+                ->withParameters([
+                    ...$operation->getParameters(),
+                    new Model\Parameter('token', 'path', 'Unique token from email', true)
+                ])
+                ->withResponses([
+                    '200' => [
+                        'description' => 'Password changed successfully',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/SimpleStatus',
+                                ],
+                            ],
+                        ],
+                    ],
+                    '400' => [
+                        'description' => 'Invalid input',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Violations',
+                                ],
+                            ],
+                        ],
+                    ],
+                    '404' => [
+                        'description' => 'Token or user not found',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    '$ref' => '#/components/schemas/Problem',
+                                ],
+                            ],
+                        ],
+                    ],
+                ])->withRequestBody(new Model\RequestBody(
+                    'Type your new password and confirm it',
+                    new ArrayObject([
+                        'application/json' => [
+                            'schema' => [
+                                '$ref' => '#/components/schemas/PasswordWithConfirmation',
+                            ],
+                        ],
+                    ]),
+                ));
+        };
+
+        $this->changeOperation($openApi, 'api_users_password_reset_confirm_item', self::METHOD_POST, $callback);
     }
 }

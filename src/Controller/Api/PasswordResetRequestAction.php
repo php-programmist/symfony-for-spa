@@ -34,7 +34,7 @@ class PasswordResetRequestAction
         /** @var ResetEmailDto $data */
         $data = $serializer->deserialize($request->getContent(), ResetEmailDto::class, 'json');
         $violations = $validator->validate($data);
-        if (0 !== \count($violations)) {
+        if (0 !== count($violations)) {
             throw new ValidationException($violations);
         }
         $user = $manager->findByEmailOrFail($data->email);
