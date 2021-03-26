@@ -160,6 +160,17 @@ class UserTest extends BaseApiTestCase
             ],
             200
         );
-        self::assertTrue($json['status']);
+        self::assertArrayHasKey('token', $json);
+        $accessToken = $json['token'];
+
+        $json = $this->sendGET('/users/me', [
+            'headers' => [
+                'accept' => 'application/json'
+            ],
+            'auth_bearer' => $accessToken
+        ], 200);
+
+        //При восстановлении пароля автоматически подтверждается Email
+        self::assertTrue($json['emailConfirmed']);
     }
 }

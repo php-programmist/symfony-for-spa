@@ -216,7 +216,7 @@ final class UserDecorator extends AbstractDecorator
                         'content' => [
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/SimpleStatus',
+                                    '$ref' => '#/components/schemas/Token',
                                 ],
                             ],
                         ],

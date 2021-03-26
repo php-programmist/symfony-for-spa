@@ -9,6 +9,7 @@ use App\Dto\PasswordRepeatedDto;
 use App\Entity\User;
 use App\Exception\User\PasswordResetTokenNotValidException;
 use App\Service\UserManager;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -23,8 +24,8 @@ class PasswordResetConfirmAction
      * @param SerializerInterface $serializer
      * @param ValidatorInterface $validator
      * @param UserManager $manager
+     * @param AuthenticationSuccessHandler $authenticationSuccessHandler
      * @return JsonResponse
-     * @throws PasswordResetTokenNotValidException
      */
     public function __invoke(
         User $data,
@@ -32,7 +33,8 @@ class PasswordResetConfirmAction
         Request $request,
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        UserManager $manager
+        UserManager $manager,
+        AuthenticationSuccessHandler $authenticationSuccessHandler
     ): JsonResponse {
         $resetRequest = $manager->fetchPasswordResetRequest($data, $token);
         if (!$resetRequest->isValid()) {
@@ -47,6 +49,6 @@ class PasswordResetConfirmAction
         }
         $manager->resetPassword($resetRequest, $data->password);
 
-        return new JsonResponse(['status' => true, 'message' => 'Вы успешно изменили пароль']);
+        return $authenticationSuccessHandler->handleAuthenticationSuccess($resetRequest->getUser());
     }
 }
