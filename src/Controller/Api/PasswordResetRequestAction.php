@@ -40,6 +40,10 @@ class PasswordResetRequestAction
         $user = $manager->findByEmailOrFail($data->email);
         $manager->sendPasswordResetRequest($user);
 
-        return new JsonResponse(['status' => true, 'message' => 'Вам отправлено письмо со ссылкой для сброса пароля']);
+        return new JsonResponse([
+            'status' => true,
+            'message' => sprintf('На указанный Вами адрес %s отправлено письмо, содержащее ссылку для сброса пароля',
+                $data->email)
+        ]);
     }
 }
