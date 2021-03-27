@@ -20,3 +20,5 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+/http/http-client.env.json
+/http/http-client.private.env.json
