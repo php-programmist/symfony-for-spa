@@ -1,0 +1,18 @@
+POST {{scheme}}{{host}}{{prefix}}/users
+Content-Type: application/json
+accept: application/json
+
+{
+  "email": "{{username}}",
+  "password": "{{password}}"
+}
+
+###
+POST {{scheme}}{{host}}{{prefix}}/users
+Content-Type: application/json
+accept: application/json
+
+{
+  "email": "{{username}}",
+  "password": ""
+}

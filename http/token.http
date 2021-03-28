@@ -1,0 +1,16 @@
+POST {{scheme}}{{host}}{{prefix}}/token
+Content-Type: application/json
+
+{
+  "email": "{{username}}",
+  "password": "{{password}}"
+}
+
+###
+POST {{scheme}}{{host}}{{prefix}}/token
+Content-Type: application/json
+
+{
+  "email": "{{username}}",
+  "password": "wrong"
+}

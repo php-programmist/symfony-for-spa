@@ -1,0 +1,8 @@
+GET {{scheme}}{{host}}{{prefix}}/users/1
+Authorization: Bearer {{access_token}}
+accept: application/json
+
+###
+GET {{scheme}}{{host}}{{prefix}}/users/me
+Authorization: Bearer {{access_token}}
+accept: application/json

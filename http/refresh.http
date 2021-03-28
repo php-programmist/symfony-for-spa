@@ -1,0 +1,6 @@
+POST {{scheme}}{{host}}{{prefix}}/token/refresh
+Content-Type: application/json
+
+{
+  "refresh_token": "{{refresh_token}}"
+}
