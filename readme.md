@@ -70,6 +70,7 @@ openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
 
 ```bash
 php bin/console doctrine:database:create --env=test
+php bin/console doctrine:schema:create --env=test
 php bin/phpunit
 ```
 
